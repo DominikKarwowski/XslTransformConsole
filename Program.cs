@@ -8,8 +8,10 @@ namespace DjK.Utilities.XslTransformConsole
         {
             Console.WriteLine("XSL Transform App");
 
-            var consoleMessageWriter = new ConsoleMessageWriter();
-            var xlstEngine = new XslTransformEngine(consoleMessageWriter);
+            var xlstEngine = new XslTransformEngine(
+                messageWriter : new ConsoleMessageWriter(),
+                inputReader : new ConsoleInputReader()
+                );
             UserInterface.MainLoop(xlstEngine);
         }
     }

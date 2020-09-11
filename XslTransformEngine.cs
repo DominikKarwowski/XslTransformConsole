@@ -8,6 +8,7 @@ namespace DjK.Utilities.XslTransformConsole
     public class XslTransformEngine
     {
         readonly IMessageWriter messageWriter;
+        readonly IInputReader inputReader;
 
         private string AppDirectory { get; }
         public string WorkingDirectory { get; private set; }
@@ -16,9 +17,10 @@ namespace DjK.Utilities.XslTransformConsole
         private string CurrentXslFileFullPath => Path.Combine(WorkingDirectory, CurrentXslFile);
         private string CurrentXmlFileFullPath => Path.Combine(WorkingDirectory, CurrentXmlFile);
 
-        public XslTransformEngine(IMessageWriter messageWriter)
+        public XslTransformEngine(IMessageWriter messageWriter, IInputReader inputReader)
         {
             this.messageWriter = messageWriter ?? throw new ArgumentNullException(nameof(messageWriter));
+            this.inputReader = inputReader ?? throw new ArgumentNullException(nameof(inputReader));
             AppDirectory = Directory.GetCurrentDirectory();
             GetWorkingDirectory(ReadFromConfigFile());
         }
@@ -44,7 +46,7 @@ namespace DjK.Utilities.XslTransformConsole
             catch (Exception e)
             {
                 messageWriter.Write(e.ToString());
-                Console.ReadLine();
+                inputReader.GetInput();
             }
             
             try
@@ -55,18 +57,18 @@ namespace DjK.Utilities.XslTransformConsole
             catch (Exception e)
             {
                 messageWriter.Write(e.ToString());
-                Console.ReadLine();
+                inputReader.GetInput();
             }
         }
 
         private string GetFileName(string inputMessage)
         {
             messageWriter.Write(inputMessage);
-            string fileName = Console.ReadLine();
+            string fileName = inputReader.GetInput();
             while (!File.Exists(Path.Combine(WorkingDirectory, fileName)))
             {
                 messageWriter.Write("Provided file does not exist in the specified directory. Try again:");
-                fileName = Console.ReadLine();
+                fileName = inputReader.GetInput();
             }
             return fileName;
         }
@@ -98,7 +100,7 @@ namespace DjK.Utilities.XslTransformConsole
         public void SetWorkingDirectory()
         {
             messageWriter.Write("Provide working directory:");
-            string path = Console.ReadLine();
+            string path = inputReader.GetInput();
 
             while (!Directory.Exists(path))
             {
@@ -115,13 +117,13 @@ namespace DjK.Utilities.XslTransformConsole
                         messageWriter.Write("Could not create directory at specified path:");
                         messageWriter.Write(path + Environment.NewLine);
                         messageWriter.Write(e.ToString());
-                        Console.ReadLine();
+                        inputReader.GetInput();
                     }
                 }
                 else
                 {
                     messageWriter.Write("Specify different directory:");
-                    path = Console.ReadLine();
+                    path = inputReader.GetInput();
                 }
             }
             
@@ -144,7 +146,7 @@ namespace DjK.Utilities.XslTransformConsole
                 {
                     messageWriter.Write("Writing to config file failed!" + Environment.NewLine);
                     messageWriter.Write(e.ToString());
-                    Console.ReadLine();
+                    inputReader.GetInput();
                 }
             }
         }
