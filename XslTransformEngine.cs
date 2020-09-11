@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Xml.Xsl;
 using System.IO;
 
-namespace XslTransformConsole
+namespace DjK.Utilities.XslTransformConsole
 {
     public class XslTransformEngine
     {
+        readonly IMessageWriter messageWriter;
+
         private string AppDirectory { get; }
         public string WorkingDirectory { get; private set; }
         public string CurrentXslFile { get; set; }
@@ -14,8 +16,9 @@ namespace XslTransformConsole
         private string CurrentXslFileFullPath => Path.Combine(WorkingDirectory, CurrentXslFile);
         private string CurrentXmlFileFullPath => Path.Combine(WorkingDirectory, CurrentXmlFile);
 
-        public XslTransformEngine()
+        public XslTransformEngine(IMessageWriter messageWriter)
         {
+            this.messageWriter = messageWriter ?? throw new ArgumentNullException(nameof(messageWriter));
             AppDirectory = Directory.GetCurrentDirectory();
             GetWorkingDirectory(ReadFromConfigFile());
         }
@@ -40,29 +43,29 @@ namespace XslTransformConsole
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                messageWriter.Write(e.ToString());
                 Console.ReadLine();
             }
             
             try
             {
                 xslt.Transform(CurrentXmlFileFullPath, CurrentXmlFileFullPath + "_out");
-                Console.WriteLine("Success!");
+                messageWriter.Write("Success!");
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                messageWriter.Write(e.ToString());
                 Console.ReadLine();
             }
         }
 
         private string GetFileName(string inputMessage)
         {
-            Console.WriteLine(inputMessage);
+            messageWriter.Write(inputMessage);
             string fileName = Console.ReadLine();
             while (!File.Exists(Path.Combine(WorkingDirectory, fileName)))
             {
-                Console.WriteLine("Provided file does not exist in the specified directory. Try again:");
+                messageWriter.Write("Provided file does not exist in the specified directory. Try again:");
                 fileName = Console.ReadLine();
             }
             return fileName;
@@ -84,7 +87,7 @@ namespace XslTransformConsole
 
             if (workingDirectory == "")
             {
-                Console.WriteLine("Working directory has not been specified so far.");
+                messageWriter.Write("Working directory has not been specified so far.");
                 SetWorkingDirectory();
             }
 
@@ -94,12 +97,12 @@ namespace XslTransformConsole
 
         public void SetWorkingDirectory()
         {
-            Console.WriteLine("Provide working directory:");
+            messageWriter.Write("Provide working directory:");
             string path = Console.ReadLine();
 
             while (!Directory.Exists(path))
             {
-                Console.WriteLine("Specified path does not exist. Do you want to create it? (y/n):");
+                messageWriter.Write("Specified path does not exist. Do you want to create it? (y/n):");
                 string response = UserInterface.GetResponse(new List<string> { "y", "n" });
                 if (response == "y")
                 {
@@ -109,15 +112,15 @@ namespace XslTransformConsole
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Could not create directory at specified path:");
-                        Console.WriteLine(path + Environment.NewLine);
-                        Console.WriteLine(e.ToString());
+                        messageWriter.Write("Could not create directory at specified path:");
+                        messageWriter.Write(path + Environment.NewLine);
+                        messageWriter.Write(e.ToString());
                         Console.ReadLine();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Specify different directory:");
+                    messageWriter.Write("Specify different directory:");
                     path = Console.ReadLine();
                 }
             }
@@ -139,8 +142,8 @@ namespace XslTransformConsole
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Writing to config file failed!" + Environment.NewLine);
-                    Console.WriteLine(e.ToString());
+                    messageWriter.Write("Writing to config file failed!" + Environment.NewLine);
+                    messageWriter.Write(e.ToString());
                     Console.ReadLine();
                 }
             }

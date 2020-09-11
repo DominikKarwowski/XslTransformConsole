@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XslTransformConsole
+namespace DjK.Utilities.XslTransformConsole
 {
     class Program
     {
@@ -8,7 +8,8 @@ namespace XslTransformConsole
         {
             Console.WriteLine("XSL Transform App");
 
-            var xlstEngine = new XslTransformEngine();
+            var consoleMessageWriter = new ConsoleMessageWriter();
+            var xlstEngine = new XslTransformEngine(consoleMessageWriter);
             UserInterface.MainLoop(xlstEngine);
         }
     }

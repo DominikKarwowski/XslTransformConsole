@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace XslTransformConsole
+namespace DjK.Utilities.XslTransformConsole
 {
     public static class UserInterface
     {
