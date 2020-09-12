@@ -262,3 +262,6 @@ __pycache__/
 
 # App generated files
 config.dat
+
+# VS Code workspace files
+*.code-Workspace
