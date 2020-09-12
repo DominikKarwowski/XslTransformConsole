@@ -1,4 +1,4 @@
-namespace DjK.Utilities.XslTransformConsole
+namespace DjK.XslTransformUtility.Core.Services
 {
     public interface IMessageWriter
     {

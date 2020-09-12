@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Xsl;
 using System.IO;
+using DjK.XslTransformUtility.Core.Services;
 
-namespace DjK.Utilities.XslTransformConsole
+namespace DjK.XslTransformUtility.Core
 {
     public class XslTransformEngine
     {
@@ -105,7 +106,7 @@ namespace DjK.Utilities.XslTransformConsole
             while (!Directory.Exists(path))
             {
                 messageWriter.Write("Specified path does not exist. Do you want to create it? (y/n):");
-                string response = UserInterface.GetResponse(new List<string> { "y", "n" });
+                string response = inputReader.GetInput(); //UserInterface.GetResponse(new List<string> { "y", "n" });
                 if (response == "y")
                 {
                     try

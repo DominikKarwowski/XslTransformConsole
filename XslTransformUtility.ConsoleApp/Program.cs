@@ -1,6 +1,9 @@
 ﻿using System;
 
-namespace DjK.Utilities.XslTransformConsole
+using DjK.XslTransformUtility.Core;
+using DjK.XslTransformUtility.Core.Services;
+
+namespace DjK.XslTransformUtility.ConsoleApp
 {
     class Program
     {
