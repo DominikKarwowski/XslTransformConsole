@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 
-using DjK.XslTransformUtility.Core;
+using DjK.XslTransformUtility.Core.Services;
 
 namespace DjK.XslTransformUtility.ConsoleApp
 {
     public static class UserInterface
     {
-        public static void MainLoop(XslTransformEngine xsltEngine)
+        public static void MainLoop(IAppConfigService appConfigService, XslTransformService xslTransformService)
         {
             string response = "";
 
@@ -15,9 +15,9 @@ namespace DjK.XslTransformUtility.ConsoleApp
             {
                 Console.Clear();
                 Console.WriteLine("Welcome to XSL Transform App");
-                Console.WriteLine($"Current working directory: {xsltEngine.WorkingDirectory}");
-                Console.WriteLine($"Current stylesheet: {xsltEngine.CurrentXslFile}");
-                Console.WriteLine($"Current xml file to transform: {xsltEngine.CurrentXmlFile}");
+                Console.WriteLine($"Current working directory: {appConfigService.WorkingDirectory}");
+                Console.WriteLine($"Current stylesheet: {appConfigService.XslFile}");
+                Console.WriteLine($"Current xml file to transform: {appConfigService.XmlFile}");
                 Console.WriteLine(Environment.NewLine);
                 Console.WriteLine("1. Change working directory.");
                 Console.WriteLine("2. Change currentstylesheet.");
@@ -29,16 +29,16 @@ namespace DjK.XslTransformUtility.ConsoleApp
                 switch (response)
                 {
                     case "1":
-                        xsltEngine.SetWorkingDirectory();
+                        appConfigService.SetWorkingDirectory();
                         break;
                     case "2":
-                        xsltEngine.SetXslFile();
+                        appConfigService.SetXslFile();
                         break;
                     case "3":
-                        xsltEngine.SetXmlFile();
+                        appConfigService.SetXmlFile();
                         break;
                     case "4":
-                        xsltEngine.Transform();
+                        xslTransformService.Transform();
                         break;
                     default:
                         break;
